@@ -1,0 +1,30 @@
+/* Hamos 的烟草生活 — iOS / 移动端贴合层（只做叠加，不改原样式） */
+
+html, body { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+
+@supports (height: 100dvh) {
+  html, body, #app { min-height: 100dvh; }
+}
+
+/* 刘海屏 / 灵动岛：给整页留安全区，顶部状态栏压不着标题 */
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* 底部提示条别被 Home 指示条盖住 */
+.toasts { bottom: calc(26px + env(safe-area-inset-bottom)) !important; }
+
+/* 触屏：双击不放大，长按不出系统菜单的怪东西 */
+* { touch-action: manipulation; }
+body { overscroll-behavior-y: none; }
+
+/* 手指比鼠标粗：把可点区域稍微放大一档 */
+@media (pointer: coarse) {
+  .btn-sm { min-height: 30px; }
+  input, select, textarea { font-size: max(16px, 1em); } /* 小于 16px 时 Safari 会自动放大页面 */
+}
+
+/* 独立窗口（加到主屏幕）下，去掉“网页感”的滚动条 */
+html.standalone body::-webkit-scrollbar { width: 0; }

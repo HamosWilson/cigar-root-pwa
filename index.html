@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hamos的烟草生活 · 烟草客</title>
+<meta name="description" content="Hamos的烟草生活 — 完全离线的雪茄、烟斗草与烟斗陈列柜：库存、风味、品吸记录与百科工作台。">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1c150f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="烟草客">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<script src="data/seed.js"></script>
+<script>
+  (function(){
+    try {
+      var s = JSON.parse(localStorage.getItem('cigarrow.v1') || 'null');
+      var t = (s && s.settings && s.settings.theme) || 'light';
+      var dark = t === 'dark' || (t === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+
+      // 手机第一次打开：桌面版那档 130% 在窄屏上太挤，按 100% 起步（只调一次，之后以他自己设的为准）
+      if (s && s.settings && window.innerWidth < 520 &&
+          !localStorage.getItem('cigarrow.mobileZoom') &&
+          Number(s.settings.zoom) > 110) {
+        s.settings.zoom = 100;
+        localStorage.setItem('cigarrow.v1', JSON.stringify(s));
+        localStorage.setItem('cigarrow.mobileZoom', '1');
+      }
+    } catch (e) {}
+  })();
+</script>
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/pwa.css">
+</head>
+<body>
+<div id="app"></div>
+<div id="overlay"></div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<noscript><p style="padding:32px">请启用 JavaScript 以使用 Hamos的烟草生活。</p></noscript>
+
+<script src="js/data.js"></script>
+<script src="js/wiki.js"></script>
+<script src="js/pipe-data.js"></script>
+<script src="js/pipe-catalog.js"></script>
+<script src="js/core.js"></script>
+<script src="js/views.js"></script>
+<script src="js/views2.js"></script>
+<script src="js/cabinet.js"></script>
+<script src="js/enrich.js"></script>
+<script src="js/app.js"></script>
+<script src="js/pwa.js"></script>
+</body>
+</html>
