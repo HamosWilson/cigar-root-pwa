@@ -1,5 +1,5 @@
-/* Hamos 的烟草生活 — 离线缓存。改了代码就把 VERSION 加一。 */
-const VERSION = 'hamos-1.3.0-20261102g';
+﻿/* Hamos 的烟草生活 — 离线缓存。改了代码就把 VERSION 加一。 */
+const VERSION = 'hamos-1.3.0-20261102h';
 const PRECACHE = [
   './',
   'index.html',
@@ -45,10 +45,10 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // 外部请求不拦（比如补全接口）
 
-  // 页面本身：先问网络，拿不到才用缓存。这样改完发一版，刷新就是新的。
+  // 页面本身：先问网络（跳过 HTTP 缓存），拿不到才用缓存。这样改完发一版，刷新就是新的。
   if (req.mode === 'navigate') {
     e.respondWith(
-      fetch(req)
+      fetch(req, { cache: 'no-store' })
         .then((res) => {
           if (res && res.ok && res.type === 'basic') {
             const copy = res.clone();

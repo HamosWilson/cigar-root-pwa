@@ -1,4 +1,4 @@
-/* PWA 胶水层：Service Worker 注册 + 独立窗口标记 + 列表视图「点一行展开」。
+﻿/* PWA 胶水层：Service Worker 注册 + 独立窗口标记 + 列表视图「点一行展开」。
    不动应用本身的数据逻辑，只在渲染完之后给表格补一层触屏排版。 */
 (function () {
   var standalone =
@@ -122,7 +122,7 @@
   // 只在 https / localhost 下有安全上下文，局域网 http 会静默跳过（能装，只是不离线）
   window.addEventListener('load', function () {
     // 地址里带版本号：换了版本就是新地址，不会卡在 Pages 那十分钟的 HTTP 缓存上
-    var BUILD = 'hamos-1.3.0-20261102g';
+    var BUILD = 'hamos-1.3.0-20261102h';
     navigator.serviceWorker.register('sw.js?v=' + BUILD, { updateViaCache: 'none' })
       .then(function (reg) {
         // 每次回到前台都问一句有没有新版本
