@@ -117,22 +117,30 @@
   document.addEventListener('DOMContentLoaded', schedule);
   schedule();
 
-  /* ── 二、Service Worker：离线缓存 ── */
+  /* ── 二、Service Worker：离线缓存 + 自己换新 ── */
   if (!('serviceWorker' in navigator)) return;
   // 只在 https / localhost 下有安全上下文，局域网 http 会静默跳过（能装，只是不离线）
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('sw.js').then(function (reg) {
-      reg.addEventListener('updatefound', function () {
-        var sw = reg.installing;
-        if (!sw) return;
-        sw.addEventListener('statechange', function () {
-          if (sw.state === 'installed' && navigator.serviceWorker.controller) {
-            console.log('[pwa] 新版本已缓存，下次打开生效');
-          }
+    // 地址里带版本号：换了版本就是新地址，不会卡在 Pages 那十分钟的 HTTP 缓存上
+    var BUILD = 'hamos-1.3.0-20261102g';
+    navigator.serviceWorker.register('sw.js?v=' + BUILD, { updateViaCache: 'none' })
+      .then(function (reg) {
+        // 每次回到前台都问一句有没有新版本
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'visible' && reg.update) reg.update();
         });
+        if (reg.update) reg.update();
+      })
+      .catch(function (e) {
+        console.log('[pwa] service worker 未注册（非 https 环境属正常）:', e && e.message);
       });
-    }).catch(function (e) {
-      console.log('[pwa] service worker 未注册（非 https 环境属正常）:', e && e.message);
+
+    // 新版本接管后自动刷一次，不用他自己动手
+    var reloading = false;
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (reloading) return;
+      reloading = true;
+      location.reload();
     });
   });
 })();

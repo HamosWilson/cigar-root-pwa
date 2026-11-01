@@ -1,5 +1,5 @@
 /* Hamos 的烟草生活 — 离线缓存。改了代码就把 VERSION 加一。 */
-const VERSION = 'hamos-1.3.0-20261102f';
+const VERSION = 'hamos-1.3.0-20261102g';
 const PRECACHE = [
   './',
   'index.html',
@@ -43,12 +43,12 @@ self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return; // 澶栭儴璇锋眰涓嶆嫤锛堟瘮濡傝ˉ鍏ㄦ帴鍙ｏ級
+  if (url.origin !== self.location.origin) return; // 外部请求不拦（比如补全接口）
 
-  e.respondWith(
-    caches.match(req, { ignoreSearch: true }).then((hit) => {
-      if (hit) return hit;
-      return fetch(req)
+  // 页面本身：先问网络，拿不到才用缓存。这样改完发一版，刷新就是新的。
+  if (req.mode === 'navigate') {
+    e.respondWith(
+      fetch(req)
         .then((res) => {
           if (res && res.ok && res.type === 'basic') {
             const copy = res.clone();
@@ -56,10 +56,24 @@ self.addEventListener('fetch', (e) => {
           }
           return res;
         })
-        .catch(() => {
-          // 绂荤嚎涓旀病缂撳瓨锛氬鑸姹傞€€鍥為椤碉紝鏁版嵁鏈潵灏卞湪鏈満 localStorage 閲?          if (req.mode === 'navigate') return caches.match('index.html');
-          throw new Error('offline');
-        });
-    })
+        .catch(() => caches.match(req, { ignoreSearch: true })
+          .then((hit) => hit || caches.match('index.html')))
+    );
+    return;
+  }
+
+  // 其余静态文件：先用缓存，同时在后台换成新的（下次打开就是新版本）
+  e.respondWith(
+    caches.open(VERSION).then((cache) =>
+      cache.match(req, { ignoreSearch: true }).then((hit) => {
+        const net = fetch(req)
+          .then((res) => {
+            if (res && res.ok && res.type === 'basic') cache.put(req, res.clone());
+            return res;
+          })
+          .catch(() => hit || new Response('', { status: 504, statusText: 'offline' }));
+        return hit || net;
+      })
+    )
   );
 });
