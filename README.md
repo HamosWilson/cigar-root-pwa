@@ -3,6 +3,19 @@
 桌面版 `Cigar Root.exe` 的同一套界面与同一份数据，改造成能装进 iPhone 主屏幕的网页应用。
 不依赖 Electron、不需要 Mac、不需要 App Store —— 用 Safari 打开、添加到主屏幕即可。
 
+## 〇、线上地址（人在外面也能用）
+
+```
+https://hamoswilson.github.io/cigar-root-pwa/
+```
+
+- 仓库：`HamosWilson/cigar-root-pwa`（公开，**只有代码和演示数据**，个人库存不进去）
+- 这是 https，Service Worker 会注册，**打开一次就整站缓存**：之后断网、开飞行模式都能开。
+- 公开版首启是应用自带的演示数据。要换成自己的库：桌面版「备份」导出 JSON → 发到手机 → 手机「设置 · 恢复」选那个文件。
+
+> 重新发布：`GH_TOKEN=... GH_USER=HamosWilson node publish_pages.mjs cigar-root-pwa`（纯 REST，不需要装 git）。
+> 脚本会先把 `data/seed.js` 换成不带数据的占位，再把其余 24 个文件推上去并开 Pages。
+
 ## 一、现在怎么用（局域网，最快）
 
 1. 双击本目录下的 `启动.cmd`（黑窗口别关，关了手机就连不上）。

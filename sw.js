@@ -1,5 +1,5 @@
 /* Hamos 的烟草生活 — 离线缓存。改了代码就把 VERSION 加一。 */
-const VERSION = 'hamos-1.3.0-20261102c';
+const VERSION = 'hamos-1.3.0-20261102e';
 const PRECACHE = [
   './',
   'index.html',
