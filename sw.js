@@ -1,5 +1,5 @@
 /* Hamos 的烟草生活 — 离线缓存。改了代码就把 VERSION 加一。 */
-const VERSION = 'hamos-1.3.0-20261102e';
+const VERSION = 'hamos-1.3.0-20261102f';
 const PRECACHE = [
   './',
   'index.html',
@@ -43,7 +43,7 @@ self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return; // 外部请求不拦（比如补全接口）
+  if (url.origin !== self.location.origin) return; // 澶栭儴璇锋眰涓嶆嫤锛堟瘮濡傝ˉ鍏ㄦ帴鍙ｏ級
 
   e.respondWith(
     caches.match(req, { ignoreSearch: true }).then((hit) => {
@@ -57,8 +57,7 @@ self.addEventListener('fetch', (e) => {
           return res;
         })
         .catch(() => {
-          // 离线且没缓存：导航请求退回首页，数据本来就在本机 localStorage 里
-          if (req.mode === 'navigate') return caches.match('index.html');
+          // 绂荤嚎涓旀病缂撳瓨锛氬鑸姹傞€€鍥為椤碉紝鏁版嵁鏈潵灏卞湪鏈満 localStorage 閲?          if (req.mode === 'navigate') return caches.match('index.html');
           throw new Error('offline');
         });
     })

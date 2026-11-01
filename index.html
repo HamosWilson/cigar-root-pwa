@@ -24,8 +24,9 @@
       var dark = t === 'dark' || (t === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
       document.documentElement.dataset.theme = dark ? 'dark' : 'light';
 
-      // 手机第一次打开：桌面版那档 130% 在窄屏上太挤，按 100% 起步（只调一次，之后以他自己设的为准）
-      if (s && s.settings && window.innerWidth < 520 &&
+      // 手机 / 平板第一次打开：桌面版那档 130% 在触屏窄屏上会把右侧顶出屏幕，
+      // 按 100% 起步（每台设备只调一次，之后以他自己在「设置」里调过的为准）
+      if (s && s.settings && window.innerWidth < 900 &&
           !localStorage.getItem('cigarrow.mobileZoom') &&
           Number(s.settings.zoom) > 110) {
         s.settings.zoom = 100;
